@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "api-gen": "ng-openapi-gen --input ./src/openapi/openapi.json --output src/openapi/generated-resources",
     "serve:ssr:appointment-system-frontend": "node dist/appointment-system-frontend/server/server.mjs"
   },
   "private": true,
@@ -24,6 +25,7 @@
     "@angular/router": "^17.3.0",
     "@angular/ssr": "^17.3.8",
     "express": "^4.18.2",
+    "ng-openapi-gen": "^0.53.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

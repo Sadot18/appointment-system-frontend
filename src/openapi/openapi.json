@@ -1,0 +1,463 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Appointment System API",
+        "description": "API para gestión de citas médicas",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "Bearer Authentication": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Citas",
+            "description": "API para gestion de citas"
+        },
+        {
+            "name": "Servicios Medicos",
+            "description": "Gestión de servicios médicos"
+        },
+        {
+            "name": "Autenticación",
+            "description": "API para login de usuarios"
+        }
+    ],
+    "paths": {
+        "/api/services-medicos": {
+            "get": {
+                "tags": [
+                    "Servicios Medicos"
+                ],
+                "summary": "Listar todos los servicios",
+                "operationId": "getAllServices",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MedicalService"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Servicios Medicos"
+                ],
+                "summary": "Crear servicio (Admin)",
+                "operationId": "createService",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateMedicalServiceRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MedicalServiceResponseDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/signup": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Registro de usuario",
+                "operationId": "signup",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignupRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Login de usuario",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponseDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/appointments": {
+            "post": {
+                "tags": [
+                    "Citas"
+                ],
+                "summary": "Crear nueva cita(Cliente)",
+                "operationId": "createAppointment",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAppointmentRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppointmentResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/appointments/{id}/cancel": {
+            "patch": {
+                "tags": [
+                    "admin-controller"
+                ],
+                "summary": "Cancelar cita",
+                "operationId": "cancelAppointment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppointmentResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ]
+            }
+        },
+        "/api/appointments/my-appointments": {
+            "get": {
+                "tags": [
+                    "Citas"
+                ],
+                "summary": "Obtener mis citas (Cliente)",
+                "operationId": "getMyAppointments",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AppointmentResponseDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/appointments": {
+            "get": {
+                "tags": [
+                    "admin-controller"
+                ],
+                "summary": "Obtener todas las citas",
+                "operationId": "getAllAppointments",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AppointmentResponseDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateMedicalServiceRequestDto": {
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "durationMinutes": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                }
+            },
+            "MedicalServiceResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "durationMinutes": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SignupRequestDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginRequestDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginResponseDto": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "CLIENT",
+                            "ADMIN"
+                        ]
+                    }
+                }
+            },
+            "CreateAppointmentRequestDto": {
+                "required": [
+                    "date",
+                    "serviceId",
+                    "startTime"
+                ],
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "startTime": {
+                        "$ref": "#/components/schemas/LocalTime"
+                    },
+                    "serviceId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "LocalTime": {
+                "type": "object",
+                "properties": {
+                    "hour": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "minute": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "second": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "nano": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "AppointmentResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "startTime": {
+                        "$ref": "#/components/schemas/LocalTime"
+                    },
+                    "endTime": {
+                        "$ref": "#/components/schemas/LocalTime"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "serviceId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "MedicalService": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "durationMinutes": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "Bearer Authentication": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
